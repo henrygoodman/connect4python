@@ -1,6 +1,7 @@
 import numpy as np
 import pygame as pygame
 import sys
+import random
 
 turn = 0
 pygame.init()
@@ -25,6 +26,15 @@ board = create_board()
 def set_game_over():
     global game_over    # Needed to modify global copy of globvar
     game_over = True
+
+# Makes a move for the computer.
+def make_move(board):
+    move = random.randint(0,6)
+    return move
+
+# Minimax algorithm
+def minimax(node, depth, int):
+    pass
 
 def find_winner(board, piece):
 
@@ -109,40 +119,44 @@ def draw_board(board):
 draw_board(board)
 while not game_over:
 
-    for event in pygame.event.get():
+    # If its the players turn, observe mouse events until they press the mouse button. 
+    if turn % 2 == 0:
+        flag = True
+        while (flag):
 
-        if event.type == pygame.QUIT:
-            sys.exit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
 
-        # Print circles at top of screen
-        if (event.type == pygame.MOUSEMOTION):
-            pygame.draw.rect(screen, (0,0,0), (0,0, width, SQUARESIZE))
-            posx = event.pos[0]
-            if turn % 2 == 0:
-                pygame.draw.circle(screen, (255,0,0), (posx, int(SQUARESIZE/2)), SQUARESIZE/2 - 5)
-            else:
-                pygame.draw.circle(screen, (255,255,0), (posx, int(SQUARESIZE/2)), SQUARESIZE/2 - 5)
-        pygame.display.update()
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pygame.draw.rect(screen, (0,0,0), (0,0, width, SQUARESIZE))
-            
-            # Ask player 1 input
-            if turn % 2 == 0:
-                selection = int(event.pos[0] / 100)
-                if not drop_piece(selection, turn):
-                    continue
-                find_winner(board, 1)   
-            # Ask player 2 input
-            else:
-                selection = int(event.pos[0] / 100)
-                if not drop_piece(selection, turn):
-                    continue
-                find_winner(board, 2)
+                # Print circles at top of screen
+                if (event.type == pygame.MOUSEMOTION):
+                    pygame.draw.rect(screen, (0,0,0), (0,0, width, SQUARESIZE))
+                    posx = event.pos[0]
+                    if turn % 2 == 0:
+                        pygame.draw.circle(screen, (255,0,0), (posx, int(SQUARESIZE/2)), SQUARESIZE/2 - 5)
+                    else:
+                        pygame.draw.circle(screen, (255,255,0), (posx, int(SQUARESIZE/2)), SQUARESIZE/2 - 5)
+                pygame.display.update()
+                
+                # When they press the mouse, make a move based on position of the mouse, then break the loop to make the computer move.
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.draw.rect(screen, (0,0,0), (0,0, width, SQUARESIZE))
+                    selection = int(event.pos[0] / 100)
+                    if not drop_piece(selection, turn):
+                        continue
+                    find_winner(board, 1)
+                    draw_board(board) 
+                    flag = False
 
-            # Increment turn count, check for winners.
-            draw_board(board)  
-            turn += 1
+    else:
+        pygame.time.wait(1000)
+        if not drop_piece(make_move(board), turn):
+            continue
+        find_winner(board, 2)
+
+    # Increment turn count, check for winners.
+    draw_board(board) 
+    turn += 1
 
     if game_over:
         pygame.time.wait(3000)
