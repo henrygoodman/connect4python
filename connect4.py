@@ -15,7 +15,7 @@ myfont = pygame.font.SysFont("monospace", 75)
 
 def create_board():
     board = np.zeros((6,7))
-    return board
+    return numpy.flipud(board)
 
     # Board index: top left corner is 0,0. bottom left is 5,0. top right is 0, 6. bottom right is 5,6 
     # board[x,y] where x refers to row (vertical), y refers to column(horizontal)
