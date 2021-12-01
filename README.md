@@ -3,8 +3,7 @@ Followed using: https://github.com/KeithGalli/Connect4-Python
 
 Built: 22/5/21
 
-First python/pygame project. 
-Currently looking at implementing minimax algorithm and automated AI player.
+Connect4 implementation using pygame. Current version: computer plays random moves until a winner is determined. 
 
 **Command line execution:**
 
